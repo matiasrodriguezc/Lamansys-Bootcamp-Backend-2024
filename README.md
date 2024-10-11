@@ -427,8 +427,3 @@ De esta manera se puede tener _trazabilidad_ entre los requerimientos y los desa
 - **Funcionalidad**: Completa la compra del carrito especificado.
 
 Todos estos métodos retornan un mensaje de éxito o de error correspondiente.
-
-## Aclaraciones
-
-Nos encontramos con problemas durante el merge al main dado un problema en la creacion de las ramas para cada user story. El programa se encuentra funcional en la rama `EC-29`
-
