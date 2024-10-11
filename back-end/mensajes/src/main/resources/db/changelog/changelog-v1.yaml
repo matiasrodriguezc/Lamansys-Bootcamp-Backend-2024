@@ -1,0 +1,292 @@
+databaseChangeLog:
+  - logicalFilePath: changelog-v1
+
+  - changeSet:
+      id: create-table-message
+      comment: Adds table message
+      author: mateo
+      changes:
+        - createTable:
+            tableName: message
+            columns:
+              - column:
+                  constraints:
+                    primaryKey: true
+                    name: PK_message
+                    nullable: false
+                  name: id
+                  type: int
+                  autoIncrement: true
+              - column:
+                  constraints:
+                    nullable: false
+                  name: owner_user_id
+                  type: varchar
+              - column:
+                  constraints:
+                    nullable: false
+                  name: target_user_id
+                  type: varchar
+              - column:
+                  constraints:
+                    nullable: false
+                  name: text
+                  type: text
+
+  - changeSet:
+      id: create-table-app_user
+      comment: Adds table app_user
+      author: mateo
+      changes:
+        - createTable:
+            tableName: app_user
+            columns:
+              - column:
+                  constraints:
+                    primaryKey: true
+                    name: PK_app_user
+                    nullable: false
+                  name: id
+                  type: varchar
+              - column:
+                  constraints:
+                    nullable: false
+                  name: username
+                  type: varchar
+              - column:
+                  constraints:
+                    nullable: false
+                  name: password
+                  type: varchar
+              - column:
+                  constraints:
+                    nullable: false
+                  name: email
+                  type: varchar
+
+  - changeSet:
+      id: add-unique-constraints-table-app_user
+      comment: Adds unique constraints in table app_user
+      author: mateo
+      changes:
+        - addUniqueConstraint:
+            columnNames: username
+            constraintName: UQ_app_user_username
+            tableName: app_user
+            validate: true
+        - addUniqueConstraint:
+            columnNames: email
+            constraintName: UQ_app_user_email
+            tableName: app_user
+            validate: true
+      
+  - changeSet:
+      id: add-foreign-key-constraints-table-message
+      comment: Add foreign key constraints in table message
+      author: mateo
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: target_user_id
+            baseTableName: message
+            constraintName: FK_message_app_user_target_user_id
+            referencedColumnNames: id
+            referencedTableName: app_user
+            validate: true
+        - addForeignKeyConstraint:
+            baseColumnNames: owner_user_id
+            baseTableName: message
+            constraintName: FK_message_app_user_owner_user_id
+            referencedColumnNames: id
+            referencedTableName: app_user
+            validate: true
+
+  - changeSet:
+      id: create-table-cart
+      comment: Adds table cart
+      author: matias
+      changes:
+        - createTable:
+            tableName: cart
+            columns:
+              - column:
+                  constraints:
+                    primaryKey: true
+                    name: PK_cart
+                    nullable: false
+                  name: id
+                  type: varchar
+              - column:
+                  constraints:
+                    nullable: false
+                  name: client_id
+                  type: varchar
+              - column:
+                  constraints:
+                    nullable: false
+                  name: seller_id
+                  type: varchar
+
+  - changeSet:
+      id: add-foreign-key-constraints-table-cart
+      comment: Add foreign key constraints in table cart
+      author: matias
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: client_id
+            baseTableName: cart
+            constraintName: FK_cart_app_user_client_id
+            referencedColumnNames: id
+            referencedTableName: app_user
+            validate: true
+        - addForeignKeyConstraint:
+            baseColumnNames: seller_id
+            baseTableName: cart
+            constraintName: FK_cart_app_user_seller_id
+            referencedColumnNames: id
+            referencedTableName: app_user
+            validate: true
+
+  - changeSet:
+      id: create-table-product
+      comment: Adds table product
+      author: matias
+      changes:
+        - createTable:
+            tableName: product
+            columns:
+              - column:
+                  constraints:
+                    primaryKey: true
+                    name: PK_product
+                    nullable: false
+                  name: id
+                  type: varchar
+              - column:
+                  constraints:
+                    nullable: false
+                  name: seller_id
+                  type: varchar
+              - column:
+                  constraints:
+                    nullable: false
+                  name: name
+                  type: varchar
+              - column:
+                  constraints:
+                    nullable: false
+                  name: stock
+                  type: int
+              - column:
+                  constraints:
+                    nullable: false
+                  name: price
+                  type: float
+
+  - changeSet:
+      id: add-foreign-key-constraints-table-product
+      comment: Add foreign key constraints in table product
+      author: matias
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: seller_id
+            baseTableName: product
+            constraintName: FK_product_app_user_seller_id
+            referencedColumnNames: id
+            referencedTableName: app_user
+            validate: true
+
+  - changeSet:
+      id: create-table-product-in-cart
+      comment: Adds table product_in_cart
+      author: matias
+      changes:
+        - createTable:
+            tableName: product_in_cart
+            columns:
+              - column:
+                  constraints:
+                    primaryKey: true
+                    name: PK_product_in_cart_1
+                    nullable: false
+                  name: cart_id
+                  type: varchar
+              - column:
+                  constraints:
+                    primaryKey: true
+                    name: PK_product_in_cart_2
+                    nullable: false
+                  name: product_id
+                  type: varchar
+              - column:
+                  constraints:
+                    nullable: false
+                  name: quantity
+                  type: int
+
+  - changeSet:
+      id: add-foreign-key-constraints-table-product-in-cart
+      comment: Add foreign key constraints in table product_in_cart
+      author: matias
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: cart_id
+            baseTableName: product_in_cart
+            constraintName: FK_product_in_cart_cart_id
+            referencedColumnNames: id
+            referencedTableName: cart
+            validate: true
+        - addForeignKeyConstraint:
+            baseColumnNames: product_id
+            baseTableName: product_in_cart
+            constraintName: FK_product_in_cart_product_id
+            referencedColumnNames: id
+            referencedTableName: product
+            validate: true
+
+  - changeSet:
+      id: create-table-wishlist
+      comment: Adds table wishlist
+      author: matias
+      changes:
+        - createTable:
+            tableName: wishlist
+            columns:
+              - column:
+                  constraints:
+                    primaryKey: true
+                    name: PK_wishlist_1
+                    nullable: false
+                  name: client_id
+                  type: varchar
+              - column:
+                  constraints:
+                    primaryKey: true
+                    name: PK_wishlist_2
+                    nullable: false
+                  name: product_id
+                  type: varchar
+              - column:
+                  constraints:
+                    nullable: false
+                  name: quantity
+                  type: int
+
+  - changeSet:
+      id: add-foreign-key-constraints-table-wishlist
+      comment: Add foreign key constraints in table wishlist
+      author: matias
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: client_id
+            baseTableName: wishlist
+            constraintName: FK_wishlist_client_id
+            referencedColumnNames: id
+            referencedTableName: app_user
+            validate: true
+        - addForeignKeyConstraint:
+            baseColumnNames: product_id
+            baseTableName: wishlist
+            constraintName: FK_wishlist_product_id
+            referencedColumnNames: id
+            referencedTableName: product
+            validate: true
